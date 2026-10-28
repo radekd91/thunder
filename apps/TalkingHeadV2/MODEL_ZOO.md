@@ -92,6 +92,8 @@ The TFHP models need:
 ```text
 assets/MeshToSpeech/models/TFHP-MouthToSpeech/
 assets/TFHP/processed/stats_train.npz
+external/DiffPoseTalk/experiments/1-with_head/SE/head-L4H4-T0.1-BS32/checkpoints/iter_0026000.pt
+external/Perceptual_3D_Talking_Head/perceptual_loss/model_loss.pth
 ```
 
 The styled TFHP models also need the original DiffPoseTalk style encoder. This is a third-party/checkpoint dependency from DiffPoseTalk, not part of the THUNDER talking-head model bundle:
@@ -130,6 +132,8 @@ assets/Lip2SpeechUnit/lip2speech/conformer.pt
 assets/Lip2SpeechUnit/lip2speech/unit_decoder.pt
 assets/Lip2SpeechUnit/lip2speech/mel_decoder.pt
 assets/TFHP/processed/stats_train.npz
+external/DiffPoseTalk/experiments/1-with_head/SE/head-L4H4-T0.1-BS32/checkpoints/iter_0026000.pt
+external/Perceptual_3D_Talking_Head/perceptual_loss/model_loss.pth
 data/THUNDER_test_example_data/ravdess/Actor_24_01-01-01-01-01-01-24_audio.wav
 data/THUNDER_test_example_data/ravdess/Actor_24_01-01-01-01-01-01-24_embeddings.npy
 data/THUNDER_test_example_data/ravdess/Actor_24_01-01-01-01-01-01-24_rec_CVT-EMICA2020_rec.hdf5

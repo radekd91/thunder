@@ -38,21 +38,15 @@ The initial release covers inference and demos for the V1 / unversioned THUNDER 
 
 The main model implementations are [DiffusionTalkingHead.py](models/DiffusionTalkingHead.py), [MotionLatentDiffusion.py](models/MotionLatentDiffusion.py), and [MeshToSpeech.py](models/MeshToSpeech.py).
 
-### Setup status
+### Setup
 
-THUNDER uses [INFERNO](https://github.com/radekd91/inferno) and is imported through `inferno.sandbox.thunder`. The expected placement is:
+THUNDER uses [INFERNO](https://github.com/radekd91/inferno) through `inferno.sandbox.thunder`. This release provides command-line inference demos and shared model code; training workflows and notebooks are deferred.
 
-```text
-<inferno-checkout>/inferno/sandbox/thunder/
-```
+Follow the [Docker inference setup](docker/inference/README.md) to clone the repositories, build the environment and run demos. Inferno, THUNDER, model weights, assets and example data stay on the host and are mounted into the container. Editing project code does not require rebuilding the image.
 
-This directory can contain the THUNDER checkout or a link to it. Model and asset paths in the model-zoo documentation are relative to the INFERNO checkout.
+The environment uses Python 3.9, PyTorch 2.1.1, PyTorch3D 0.7.9 and Transformers 4.36.2. Build it locally using the supplied script; a prebuilt release image has not been published yet.
 
-This lean checkout contains command-line inference demos and their shared model code. Training entry points, experiment configurations and notebooks are not included.
-
-Use an existing INFERNO environment with the required external repositories and assets. The demo smoke checks used Python 3.9, PyTorch 2.1.1, PyTorch3D 0.7.9 and Transformers 4.36.2 in an existing CUDA 12.3.1 container. Building that environment from scratch is not yet verified by this checkout.
-
-Follow the app READMEs for demo commands and the model zoos for asset paths. For the download helpers, explicitly set `INFERNO_ROOT` to your INFERNO checkout. Weights, example data and external repositories are separate dependencies, not bundled in this Git repository. Download availability and asset redistribution permissions remain separate release checks.
+Follow the app READMEs for demo commands and the model zoos for asset paths. Set `INFERNO_ROOT` explicitly when using download helpers. Model bundles and external repositories are separate from this Git repository.
 
 
 # Acknowledgements
