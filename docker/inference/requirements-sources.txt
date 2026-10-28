@@ -1,0 +1,7 @@
+# Source pins from the environment used for the verified demo matrix.
+chumpy @ git+https://github.com/mattloper/chumpy.git@580566eafc9ac68b2614b64d6f7aaa84eebb70da
+psbody-mesh @ git+https://github.com/radekd91/mesh.git@437fee14be80bcaecdde4701ed54324a5452a453
+scikit-video @ git+https://github.com/scikit-video/scikit-video.git@b5b02c7cb7b0394b8d92902ad4b4ca3d75faee3b
+pytorchvideo @ git+https://github.com/facebookresearch/pytorchvideo.git@28fe037d212663c6a24f373b94cc5d478c8c1a1d
+pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@b6a77ad7aaf41ed90fca80ce6a2bac3c462a7881
+kaldifeat==1.24

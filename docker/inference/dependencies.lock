@@ -1,0 +1,4 @@
+# destination|public URL|commit|compatibility patch|patch SHA256
+external/ImageBind|https://github.com/facebookresearch/ImageBind.git|53680b02d7e37b19b124fa37bae4b6c98c38f5be|-|-
+external/DiffPoseTalk|https://github.com/DiffPoseTalk/DiffPoseTalk.git|2c761f174776ffe380cd89b875fc8eb49e90a5a1|diffposetalk-inference.patch|95926231ebd80c03e8ac88189541a796a2086025d89cc558eb5e93569b122157
+external/Perceptual_3D_Talking_Head|https://github.com/radekd91/Perceptual_3D_Talking_Head.git|45b53cbd9f617e4cfb47e4914ffbbeaafa98fd5a|-|-

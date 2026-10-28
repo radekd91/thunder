@@ -1,0 +1,24 @@
+name: thunder-inference
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.9.23
+  - pip=24.3.1
+  - setuptools=69.5.1
+  - wheel=0.45.1
+  - pytorch=2.1.1
+  - pytorch-cuda=12.1
+  - torchvision=0.16.1
+  - torchaudio=2.1.1
+  # Match the working PyTorch 2.1.1 OpenMP ABI (PyTorch requires LLVM <16).
+  - mkl=2022.1.0
+  - llvm-openmp=15.0.7
+  - numpy=1.26.2
+  - av=11.0.0
+  - ffmpeg=6.1.1
+  # Conda's recipe permits maintained PyOpenGL versions; PyPI pins 3.1.0.
+  - pyrender=0.1.45
+  - pyopengl=3.1.10

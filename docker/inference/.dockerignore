@@ -1,0 +1,9 @@
+**
+!Dockerfile
+!.dockerignore
+!environment.yaml
+!requirements.txt
+!requirements-sources.txt
+!install.sh
+!bootstrap.sh
+!constraints.txt

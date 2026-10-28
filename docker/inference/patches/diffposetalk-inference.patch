@@ -1,0 +1,75 @@
+--- a/extract_style.py
++++ b/extract_style.py
+@@ -4,12 +4,16 @@
+ import numpy as np
+ import torch
+ 
+-from models import StyleEncoder
+-from utils import get_model_path
++if __package__:
++    from .models import StyleEncoder
++    from .utils import get_model_path
++else:
++    from models import StyleEncoder
++    from utils import get_model_path
+ 
+ 
+ class StyleExtractor:
+-    def __init__(self, checkpoint_path, device='cuda'):
++    def __init__(self, checkpoint_path, device='cuda', data_root=None):
+         self.device = device
+ 
+         model_data = torch.load(checkpoint_path, map_location=device)
+@@ -21,7 +25,9 @@
+         if self.model_args.stats_file is not None:
+             stats_file: Path = self.model_args.stats_file
+             if stats_file is not None and not stats_file.is_absolute():
+-                stats_file = self.model_args.data_root / stats_file
++                if data_root is not None:
++                    self.model_args.data_root = Path(data_root)
++                stats_file = Path(self.model_args.data_root) / stats_file
+             coef_stats = dict(np.load(stats_file))
+             self.coef_stats = {k: torch.from_numpy(v).to(device) for k, v in coef_stats.items()}
+         else:
+@@ -66,6 +72,41 @@
+         return style_feat
+ 
+ 
++    @torch.no_grad()
++    def extract_inferno(self, exp, jaw, global_pose=None, start_frame=0):
++        end_frame = start_frame + self.n_motions
++
++        B = exp.shape[0]
++        T = exp.shape[1]
++        # assert B == 1
++        num_exp_coeffs = self.coef_stats['exp_mean'].shape[0]
++        # exp = exp[0]
++        # jaw = jaw[0]
++
++        min_T = min(T, self.n_motions)
++        exp = exp[:, :min_T]
++        jaw = jaw[:, :min_T]
++
++        exp = exp[..., :num_exp_coeffs]
++        exp = (exp - self.coef_stats['exp_mean'].unsqueeze(0)) / self.coef_stats['exp_std'].unsqueeze(0)
++        jaw = (jaw - self.coef_stats['pose_mean'][..., 3:].unsqueeze(0)) / self.coef_stats['pose_std'][..., 3:].unsqueeze(0)
++
++        if self.no_head_pose:
++            motion_coef = torch.cat([exp, jaw], dim=-1)
++        else:
++            assert global_pose is not None, "Global pose must be provided if head pose is not excluded"
++            global_pose = global_pose[:, :min_T]
++            global_pose = (global_pose - self.coef_stats['pose_mean'][..., :3].unsqueeze(0)) / self.coef_stats['pose_std'][..., :3].unsqueeze(0)
++            motion_coef = torch.cat([exp, global_pose, jaw], dim=-1)
++
++        if self.model_args.rot_repr == 'aa':
++            # Remove mouth rotation over y, z axis
++            motion_coef = motion_coef[..., :-2]
++
++        style_feat = self.model(motion_coef)
++        return style_feat
++
++
+ def main(args):
+     checkpoint_path, exp_name = get_model_path(args.exp_name, args.iter, 'SE')
+     extractor = StyleExtractor(checkpoint_path, device=args.device)

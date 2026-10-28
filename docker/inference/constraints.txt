@@ -1,0 +1,6 @@
+# Keep pip's resolver on the CUDA runtime installed by Conda.
+torch==2.1.1
+torchvision==0.16.1
+torchaudio==2.1.1
+numpy==1.26.2
+av==11.0.0
