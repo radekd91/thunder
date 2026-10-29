@@ -10,12 +10,12 @@ Use x86-64 Linux (or an x86-64 Linux distribution under WSL2), an NVIDIA GPU, Do
 Container Toolkit. Run the commands in that Linux shell. The smoke matrix needs
 the model-zoo downloads, including M2F and perceptual models, and the demo assets.
 
-Clone Inferno's release branch and initialize only the THUNDER submodule:
+Clone Inferno's master branch and initialize only the THUNDER submodule:
 
 ```bash
 mkdir thunder-release
 cd thunder-release
-git clone --branch release/thunder https://github.com/radekd91/inferno.git inferno
+git clone --branch master https://github.com/radekd91/inferno.git inferno
 export INFERNO_ROOT="$PWD/inferno"
 git -C "$INFERNO_ROOT" submodule update --init -- inferno/sandbox/thunder
 export THUNDER_ROOT="$INFERNO_ROOT/inferno/sandbox/thunder"
@@ -25,7 +25,7 @@ bash "$THUNDER_ROOT/docker/inference/build.sh"
 
 Inferno pins the THUNDER commit through its submodule. `prepare.sh` checks that
 Inferno's committed code matches the validated revision
-`8465fffb1ff5dd819d32f3509de9065ddbb37896`. Updates limited to the root README,
+`dbc12ef3c8a483a6e32d4abbb08ad9c1b8306e32`. Updates limited to the root README,
 Git ignore/submodule metadata, or the THUNDER submodule pin are compatible;
 changes to other committed files or external dependency pins are rejected.
 Use a full clone so the validated revision is available. These checks do not
