@@ -122,7 +122,9 @@ class TestDataset(pl.LightningDataModule):
 
         sequence_length = self.sequence_length
         if sequence_length == "all":
-            sequence_length = wavdata.shape[0] // (sampling_rate // self.expected_fps)
+            samples_per_frame = sampling_rate // self.expected_fps
+            # Pad the final partial frame so the complete input audio is retained.
+            sequence_length = (wavdata.shape[0] + samples_per_frame - 1) // samples_per_frame
 
         wav_per_frame = sampling_rate // self.expected_fps 
         # wavdata_ = np.zeros((num_frames, wav_per_frame), dtype=wavdata.dtype) 

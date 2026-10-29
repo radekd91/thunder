@@ -129,7 +129,9 @@ class MeshToSpeechTestDataset(pl.LightningDataModule):
 
         sequence_length = self.sequence_length
         if sequence_length == "all":
-            sequence_length = wavdata.shape[0] // (sampling_rate // self.expected_fps)
+            samples_per_frame = sampling_rate // self.expected_fps
+            # Pad the final partial frame so the complete input audio is retained.
+            sequence_length = (wavdata.shape[0] + samples_per_frame - 1) // samples_per_frame
 
         wav_per_frame = sampling_rate // self.expected_fps 
         # wavdata_ = np.zeros((num_frames, wav_per_frame), dtype=wavdata.dtype) 
@@ -164,7 +166,7 @@ class MeshToSpeechTestDataset(pl.LightningDataModule):
         reconstruction_path = self.reconstruction_list[index]
         assert reconstruction_path.exists() 
 
-        end_frame = start_frame + num_read_frames
+        end_frame = start_frame + sample["raw_audio"].shape[0]
 
         # shape_pose_cam = load_reconstruction_list(reconstruction_path , 
         #                                                 start_frame=start_frame, end_frame=end_frame)
@@ -204,11 +206,11 @@ class MeshToSpeechTestDataset(pl.LightningDataModule):
         # 3) dummy reconstructions in absence of GT
         sample = self._get_reconstructions(index, start_frame, num_read_frames, sample)
 
-        T = min(sample["gt_exp"].shape[0], T)
-
-        sample["raw_audio"] = sample["raw_audio"][:T]
-        sample["landmarks_validity"]["mediapipe"] = sample["landmarks_validity"]["mediapipe"][:T]
-        # sample["samplerate"] = sample["samplerate"][:T]
+        if sample["gt_exp"].shape[0] < T:
+            raise ValueError(
+                f"Reconstruction contains {sample['gt_exp'].shape[0]} frames, but the audio requires {T}. "
+                "Provide reconstruction for the complete audio or explicitly set --max_seq_len to a supported length."
+            )
         
         sample["speaker_embedding"] = load_speaker_embedding(self.speaker_embedding_list[index])
 
@@ -246,8 +248,7 @@ def prepare_data(cfg, audio_path, reconstruction_path, speaker_embedding_path):
 def load_data(cfg, audio_path, reconstruction_path, speaker_embedding_path, sequence_length): 
     cfg.data.preload_videos = False
     cfg.data.num_workers = 0 
-    if sequence_length is not None:
-        cfg.learning.batching.sequence_length_test = sequence_length
+    cfg.learning.batching.sequence_length_test = sequence_length if sequence_length is not None else "all"
     dm, sequence_name = prepare_data(cfg, audio_path, reconstruction_path, speaker_embedding_path)
     dm.prepare_data()
 

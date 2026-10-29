@@ -43,7 +43,7 @@ def get_arg_parser():
         "--max_seq_len",
         type=int,
         default=None,
-        help="Maximum sequence length."
+        help="Optional maximum number of frames at 25 fps; by default, process the entire input audio."
     )
 
     parser.add_argument(
