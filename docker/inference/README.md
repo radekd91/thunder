@@ -25,7 +25,7 @@ bash "$THUNDER_ROOT/docker/inference/build.sh"
 
 Inferno pins the THUNDER commit through its submodule. `prepare.sh` checks that
 Inferno's committed code matches the validated revision
-`36681d55ffb9b1b0e444bb1f980183df1e02074d`. Updates limited to the root README,
+`8465fffb1ff5dd819d32f3509de9065ddbb37896`. Updates limited to the root README,
 Git ignore/submodule metadata, or the THUNDER submodule pin are compatible;
 changes to other committed files or external dependency pins are rejected.
 Use a full clone so the validated revision is available. These checks do not

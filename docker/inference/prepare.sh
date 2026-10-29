@@ -21,7 +21,7 @@ done
 inferno=$(realpath "$inferno")
 # Validate committed runtime content, rather than a parent commit ID that changes
 # whenever THUNDER's submodule pin or setup documentation is updated.
-validated_inferno=36681d55ffb9b1b0e444bb1f980183df1e02074d
+validated_inferno=8465fffb1ff5dd819d32f3509de9065ddbb37896
 actual_inferno=$(git -C "$inferno" rev-parse HEAD)
 git -C "$inferno" cat-file -e "${validated_inferno}^{commit}" 2>/dev/null ||
     fail "Missing validated Inferno revision $validated_inferno. Use a full clone, or fetch that revision first."
