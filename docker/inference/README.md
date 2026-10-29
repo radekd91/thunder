@@ -10,18 +10,34 @@ Use x86-64 Linux (or an x86-64 Linux distribution under WSL2), an NVIDIA GPU, Do
 Container Toolkit. Run the commands in that Linux shell. The smoke matrix needs
 the model-zoo downloads, including M2F and perceptual models, and the demo assets.
 
-Clone Inferno without recursive submodules and clone THUNDER separately:
+Clone Inferno's release branch and initialize only the THUNDER submodule:
 
 ```bash
 mkdir thunder-release
 cd thunder-release
-git clone https://github.com/radekd91/inferno.git inferno
-git -C inferno checkout --detach 36681d55ffb9b1b0e444bb1f980183df1e02074d
-git clone https://github.com/radekd91/thunder.git thunder
+git clone --branch release/thunder https://github.com/radekd91/inferno.git inferno
 export INFERNO_ROOT="$PWD/inferno"
-export THUNDER_ROOT="$PWD/thunder"
+git -C "$INFERNO_ROOT" submodule update --init -- inferno/sandbox/thunder
+export THUNDER_ROOT="$INFERNO_ROOT/inferno/sandbox/thunder"
 bash "$THUNDER_ROOT/docker/inference/prepare.sh"
 bash "$THUNDER_ROOT/docker/inference/build.sh"
+```
+
+Inferno pins the THUNDER commit through its submodule. `prepare.sh` checks that
+Inferno's committed code matches the validated revision
+`36681d55ffb9b1b0e444bb1f980183df1e02074d`. Updates limited to the root README,
+Git ignore/submodule metadata, or the THUNDER submodule pin are compatible;
+changes to other committed files or external dependency pins are rejected.
+Use a full clone so the validated revision is available. These checks do not
+certify uncommitted changes in a developer checkout; use a fresh checkout for
+release verification.
+
+Separate host checkouts remain supported. Instead of initializing THUNDER above,
+clone it separately and set `THUNDER_ROOT` before running preparation:
+
+```bash
+git clone https://github.com/radekd91/thunder.git thunder
+export THUNDER_ROOT="$PWD/thunder"
 ```
 
 `prepare.sh` fetches only ImageBind, DiffPoseTalk and Perceptual_3D_Talking_Head
@@ -34,10 +50,10 @@ The script does not modify `.gitmodules`.
 Rerunning preparation recognizes already-applied patches. Unexpected origins,
 revisions and conflicting changes are rejected without overwriting them.
 Avoid recursive submodule initialization: other sandboxes are not part of this
-inference environment. Preparation creates an empty
-`inferno/inferno/sandbox/thunder` directory as a container mountpoint. It does not
-copy or link code there. Existing symlinks are rejected, because Docker can resolve
-them to the original host path. Use a fresh checkout.
+inference environment. Preparation preserves an existing THUNDER submodule checkout.
+For separate clones, it creates an empty `inferno/inferno/sandbox/thunder` directory
+as a container mountpoint. It does not copy or link code there. Existing symlinks
+are rejected, because Docker can resolve them to the original host path.
 
 Download the shared assets and model families on the host (requires curl or wget
 and unzip), keeping the directory layout unchanged:

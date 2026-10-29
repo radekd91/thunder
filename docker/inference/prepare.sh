@@ -19,13 +19,23 @@ done
     echo "Set --inferno-root to a fresh Inferno checkout." >&2; exit 2;
 }
 inferno=$(realpath "$inferno")
-expected_inferno=36681d55ffb9b1b0e444bb1f980183df1e02074d
+# Validate committed runtime content, rather than a parent commit ID that changes
+# whenever THUNDER's submodule pin or setup documentation is updated.
+validated_inferno=36681d55ffb9b1b0e444bb1f980183df1e02074d
 actual_inferno=$(git -C "$inferno" rev-parse HEAD)
-[[ $actual_inferno == "$expected_inferno" ]] || {
-    echo "Expected Inferno revision $expected_inferno, found $actual_inferno." >&2
-    echo "In a fresh checkout, run: git -C \"$inferno\" checkout --detach $expected_inferno" >&2
+git -C "$inferno" cat-file -e "${validated_inferno}^{commit}" 2>/dev/null ||
+    fail "Missing validated Inferno revision $validated_inferno. Use a full clone, or fetch that revision first."
+thunder_entry=$(git -C "$inferno" ls-tree "$actual_inferno" -- inferno/sandbox/thunder)
+[[ -z $thunder_entry || ${thunder_entry%% *} == 160000 ]] ||
+    fail "Inferno must register THUNDER as a submodule, not embedded files or a symlink."
+if ! git -C "$inferno" diff --quiet --no-ext-diff --no-textconv \
+    --ignore-submodules=none "$validated_inferno" "$actual_inferno" -- . \
+    ':(top,literal,exclude).gitignore' ':(top,literal,exclude).gitmodules' \
+    ':(top,literal,exclude)README.md' ':(top,literal,exclude)inferno/sandbox/thunder'; then
+    echo "Inferno code differs from validated revision $validated_inferno." >&2
+    echo "In a fresh checkout, run: git -C \"$inferno\" checkout --detach $validated_inferno" >&2
     exit 2
-}
+fi
 for relative in inferno/sandbox/thunder assets data; do
     path=$inferno/$relative
     [[ ! -L $path ]] || {
