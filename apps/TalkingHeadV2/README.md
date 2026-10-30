@@ -4,7 +4,7 @@ This app adapts the INFERNO TalkingHead project for THUNDER. The initial release
 
 ## Setup and assets
 
-See the repository [setup status](../../README.md#setup-status) for environment prerequisites.
+See the repository [setup instructions](../../README.md#setup) for environment prerequisites. The [Docker guide](../../docker/inference/README.md#choose-an-image) supports either downloading and loading the prebuilt image or building it locally. Models and assets are downloaded separately.
 
 The [model zoo](MODEL_ZOO.md) lists the required model bundles, shared assets, and expected paths. The existing download entry points are:
 

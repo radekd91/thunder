@@ -42,9 +42,9 @@ The main model implementations are [DiffusionTalkingHead.py](models/DiffusionTal
 
 THUNDER uses [INFERNO](https://github.com/radekd91/inferno) through `inferno.sandbox.thunder`. This release provides command-line inference demos and shared model code; training workflows and notebooks are deferred.
 
-Follow the [Docker inference setup](docker/inference/README.md) to clone the repositories, build the environment and run demos. Inferno, THUNDER, model weights, assets and example data stay on the host and are mounted into the container. Editing project code does not require rebuilding the image.
+Follow the [Docker inference setup](docker/inference/README.md) to clone the repositories, load the prebuilt image or build the environment locally, and run demos. Inferno, THUNDER, model weights, assets and example data stay on the host and are mounted into the container. Editing project code does not require rebuilding the image.
 
-The environment uses Python 3.9, PyTorch 2.1.1, PyTorch3D 0.7.9 and Transformers 4.36.2. Build it locally using the supplied script; a prebuilt release image has not been published yet.
+The environment uses Python 3.9, PyTorch 2.1.1, PyTorch3D 0.7.9 and Transformers 4.36.2. Download the [prebuilt Docker image](https://download.is.tue.mpg.de/thunder/docker_images/thunder_docker.tar) (approximately 7.95 GB), or build it locally using the supplied script. See [download, checksum and loading instructions](docker/inference/README.md#use-the-prebuilt-image). Loading the image replaces the build step; repository preparation and model/asset downloads are still required.
 
 Follow the app READMEs for demo commands and the model zoos for asset paths. Set `INFERNO_ROOT` explicitly when using download helpers. Model bundles and external repositories are separate from this Git repository.
 

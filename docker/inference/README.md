@@ -1,7 +1,7 @@
 # THUNDER inference environment
 
-Build the environment image locally, then run host checkouts inside it. No prebuilt
-release image has been published yet. Inferno,
+Load the [prebuilt environment image](#use-the-prebuilt-image), or build it locally,
+then run host checkouts inside it. Inferno,
 THUNDER, downloaded models, assets and example data are never copied into the image.
 Editing code does not require an image rebuild. The Dockerfile's own directory is
 the complete build context.
@@ -20,7 +20,6 @@ export INFERNO_ROOT="$PWD/inferno"
 git -C "$INFERNO_ROOT" submodule update --init -- inferno/sandbox/thunder
 export THUNDER_ROOT="$INFERNO_ROOT/inferno/sandbox/thunder"
 bash "$THUNDER_ROOT/docker/inference/prepare.sh"
-bash "$THUNDER_ROOT/docker/inference/build.sh"
 ```
 
 Inferno pins the THUNDER commit through its submodule. `prepare.sh` checks that
@@ -54,6 +53,43 @@ inference environment. Preparation preserves an existing THUNDER submodule check
 For separate clones, it creates an empty `inferno/inferno/sandbox/thunder` directory
 as a container mountpoint. It does not copy or link code there. Existing symlinks
 are rejected, because Docker can resolve them to the original host path.
+
+## Choose an image
+
+After preparing the repositories, use either option below. Both provide the same
+`thunder-inference:local` tag used by `run.sh` and `smoke.sh`.
+
+### Use the prebuilt image
+
+Download the [Docker archive](https://download.is.tue.mpg.de/thunder/docker_images/thunder_docker.tar)
+(7,951,203,328 bytes, approximately 7.95 GB). From a host directory with sufficient
+free space, download it, verify the SHA-256 checksum, and load it into Docker:
+
+```bash
+curl --fail --location --retry 3 --continue-at - \
+  --output thunder_docker.tar \
+  https://download.is.tue.mpg.de/thunder/docker_images/thunder_docker.tar &&
+printf '%s  %s\n' \
+  '56507ee8e4d8097069402c49f20cef449f94a4ed3c016b8569f9d03c0d75703c' \
+  'thunder_docker.tar' | sha256sum --check - &&
+docker load --input thunder_docker.tar
+```
+
+The checksum must report `thunder_docker.tar: OK` before loading. The command
+restores `thunder-inference:local`; use `docker load`, not `docker import`.
+Skip `build.sh` when using this option. The archive contains the environment,
+so still run `prepare.sh` and download the models, assets and example data below.
+The same x86-64 Linux/WSL2 and NVIDIA GPU requirements apply to both options.
+
+### Build locally
+
+To build the image yourself instead of downloading it:
+
+```bash
+bash "$THUNDER_ROOT/docker/inference/build.sh"
+```
+
+## Download models and run demos
 
 Download the shared assets and model families on the host (requires curl or wget
 and unzip), keeping the directory layout unchanged:

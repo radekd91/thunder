@@ -6,7 +6,7 @@ The initial release covers inference and demos. Training workflows are planned f
 
 ## Setup and assets
 
-See the repository [setup status](../../README.md#setup-status) for environment prerequisites.
+See the repository [setup instructions](../../README.md#setup) for environment prerequisites. The [Docker guide](../../docker/inference/README.md#choose-an-image) supports either downloading and loading the prebuilt image or building it locally. Models and assets are downloaded separately.
 
 The [model download script](demos/download_thunder_mesh_to_speech_models.sh) selects the model bundles documented in the model zoo. Shared assets are handled by the [THUNDER asset script](../TalkingHeadV2/demos/download_thunder_assets.sh). Asset and model license terms apply separately from the source code.
 
